@@ -1,5 +1,7 @@
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -80,5 +82,19 @@ public final class JsonParser
         final Optional<LocalDateTime> updatedAt = JsonParser.parseUpdatedAt(matchers[4]);
 
         return new Task(id, description, status, createdAt, updatedAt);
+    }
+
+    public static List<Task> parseTaskArray(final String jsonArray)
+    {
+        if (jsonArray.trim().equals("{}"))
+            return List.of();
+
+        // Remove square brackets
+        final String cleanedJson = jsonArray.replaceAll("\\[", "").replaceAll("]","");
+
+        return Arrays.stream(cleanedJson.split("}\\s*,\\s*\\{"))
+                .map(task -> task.replaceAll("\\{", "").replaceAll("}", "").replaceAll(",", ""))
+                .map(JsonParser::fromJsonString)
+                .toList();
     }
 }

@@ -18,79 +18,24 @@ public class TaskManager
     public TaskManager()
     {
         // Create the file if it doesn't exist
-        createJsonFile();
+        FileOperations.createFileIfNotExists(filePath);
 
         loadTasksFromJson();
 
         updateNextId();
     }
 
-    private void createJsonFile()
-    {
-        if (!Files.exists(filePath))
-        {
-            try
-            {
-                Files.createFile(filePath);
-                Files.writeString(filePath, "{}");
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void loadTasksFromJson()
     {
-        try
-        {
-            String jsonText = Files.readString(filePath);
-
-            if (!jsonText.trim().equals("{}"))
-            {
-                // Remove square brackets
-                jsonText = jsonText.replaceAll("\\[", "").replaceAll("]", "");
-
-                // Split tasks into array
-                String[] tasks = jsonText.split("}\\s*,\\s*\\{");
-
-                // Remove braces and commas from each task string
-                for (int i = 0; i < tasks.length; i++)
-                    tasks[i] = tasks[i].replaceAll("\\{", "").replaceAll("}", "").replaceAll(",", "");
-
-                for (String task : tasks)
-                    this.tasks.add(Task.fromJsonString(task));
-            }
-        }
-        catch (IOException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        final String jsonContent = FileOperations.readFile(filePath);
+        final List<Task> loadedTasks = JsonParser.parseTaskArray(jsonContent);
+        this.tasks.addAll(loadedTasks);
     }
 
     private void saveTasksToJson()
     {
-        StringBuilder jsonTasks = new StringBuilder();
-        jsonTasks.append("[\n");
-
-        for (Task task : tasks)
-        {
-            jsonTasks.append(Task.toJsonString(task));
-            if (task != tasks.getLast())
-                jsonTasks.append(",\n");
-        }
-
-        jsonTasks.append("\n]");
-
-        try (FileWriter writer = new FileWriter(String.valueOf(filePath)))
-        {
-            writer.write(String.valueOf(jsonTasks));
-        }
-        catch (IOException e)
-        {
-            System.out.println(e.getMessage());
-        }
+        final String jsonContent = JsonFormatter.tasksToJson(tasks);
+        FileOperations.writeFile(filePath, jsonContent);
     }
 
     private void updateNextId()
@@ -128,17 +73,17 @@ public class TaskManager
 
     public void updateDescription(int id, String description)
     {
-        Task task = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
-        task.setDescription(description);
-        task.setUpdatedAt(LocalDateTime.now());
+        Task oldTask = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
+        Task newTask = oldTask.withDescription(description);
+        tasks.set(tasks.indexOf(oldTask), newTask);
         saveTasksToJson();
     }
 
     public void updateStatus(int id, Status status)
     {
-        Task task = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
-        task.setStatus(status);
-        task.setUpdatedAt(LocalDateTime.now());
+        Task oldTask = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
+        Task newTask = oldTask.withStatus(status);
+        tasks.set(tasks.indexOf(oldTask), newTask);
         saveTasksToJson();
     }
 
