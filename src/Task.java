@@ -50,12 +50,6 @@ public record Task(
         return new Task(this.id, this.description, newStatus, this.createdAt, Optional.of(LocalDateTime.now()));
     }
 
-//    public static String toJsonString(Task task)
-//    {
-//        return String.format("\t{\n\t\t\"id\": %d,\n\t\t\"description\": \"%s\",\n\t\t\"status\": \"%s\",\n\t\t\"Created At\": \"%s\",\n\t\t\"Updated At\": \"%s\"\n\t}",
-//                task.getId(), task.getDescription(), task.getStatus(), task.getCreatedAt(), task.getUpdatedAt());
-//    }
-
 //    @Override
 //    public String toString()
 //    {
