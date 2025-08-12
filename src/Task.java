@@ -50,68 +50,6 @@ public record Task(
         return new Task(this.id, this.description, newStatus, this.createdAt, Optional.of(LocalDateTime.now()));
     }
 
-//    public static Task createNew(final int id, final String description)
-//    {
-//
-//    }
-
-//    public Task
-//    {
-//        setId(id);
-//        setDescription(description);
-//        setStatus(status);
-//        setCreatedAt(LocalDateTime.now());
-//        setUpdatedAt(null);
-//    }
-
-//    private void setId(int id)
-//    {
-//        if (id <= 0)
-//            throw new IllegalArgumentException("ID must be a positive number");
-//
-//        this.id = id;
-//    }
-
-//    public void setDescription(String description)
-//    {
-//        if (description == null || description.trim().isEmpty())
-//            throw new IllegalArgumentException("Description cannot be empty");
-//
-//        this.description = description;
-//    }
-
-//    public void setStatus(Status status)
-//    {
-//        if (status == null)
-//            throw new IllegalArgumentException("Status cannot be null");
-//
-//        this.status = status;
-//    }
-
-//    public void setCreatedAt(LocalDateTime createdAt)
-//    {
-//        if (createdAt == null)
-//            throw new IllegalArgumentException("createdAt cannot be null");
-//
-//        // Only compare if updatedAt is not null
-//        if (updatedAt != null && createdAt.isAfter(updatedAt))
-//            throw new IllegalArgumentException("createdAt cannot be after updatedAt");
-//
-//        this.createdAt = createdAt;
-//    }
-
-//    public void setUpdatedAt(LocalDateTime updatedAt)
-//    {
-//        if (updatedAt == null)
-//            throw new IllegalArgumentException("updatedAt cannot be null");
-//
-//        // Only compare if createdAt is not null
-//        if (createdAt != null && updatedAt.isBefore(createdAt))
-//            throw new IllegalArgumentException("updatedAt cannot be before createdAt");
-//
-//        this.updatedAt = updatedAt;
-//    }
-
 //    public static String toJsonString(Task task)
 //    {
 //        return String.format("\t{\n\t\t\"id\": %d,\n\t\t\"description\": \"%s\",\n\t\t\"status\": \"%s\",\n\t\t\"Created At\": \"%s\",\n\t\t\"Updated At\": \"%s\"\n\t}",
