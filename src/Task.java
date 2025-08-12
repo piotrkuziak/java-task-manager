@@ -16,23 +16,11 @@ public record Task(
 
     public Task
     {
-        if (id <= 0)
-            throw new IllegalArgumentException("ID must be a positive number");
-
-        if (description == null || description.trim().isEmpty())
-            throw new IllegalArgumentException("Description cannot be empty");
-
-        if (status == null)
-            throw new IllegalArgumentException("Status cannot be null");
-
-        if (createdAt == null)
-            throw new IllegalArgumentException("createdAt cannot be null");
-
-        // Only compare if updatedAt is not null
-        updatedAt.ifPresent(updateTime -> {
-            if (createdAt.isAfter(updateTime))
-                throw new IllegalArgumentException("createdAt cannot be after updatedAt");
-        });
+        ValidationUtils.validateId(id);
+        ValidationUtils.validateDescription(description);
+        ValidationUtils.validateStatus(status);
+        ValidationUtils.validateCreatedAt(createdAt);
+        ValidationUtils.validateUpdatedAt(createdAt, updatedAt);
     }
 
     public static Task createNew(final int newId, final String newDescription)
