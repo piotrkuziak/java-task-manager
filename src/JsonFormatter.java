@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class JsonFormatter
 {
     private JsonFormatter() {}
@@ -10,5 +13,12 @@ public final class JsonFormatter
 
         return String.format("\t{\n\t\t\"id\": %d,\n\t\t\"description\": \"%s\",\n\t\t\"status\": \"%s\",\n\t\t\"Created At\": \"%s\",\n\t\t\"Updated At\": \"%s\"\n\t}",
                 task.id(), task.description(), task.status(), task.createdAt(), updatedAtStr);
+    }
+
+    public static String tasksToJson(List<Task> tasks)
+    {
+        return tasks.stream()
+                .map(JsonFormatter::taskToJson)
+                .collect(Collectors.joining(",\n", "[\n", "\n]"));
     }
 }
