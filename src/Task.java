@@ -10,8 +10,6 @@ public record Task(
         Optional<LocalDateTime> updatedAt
 )
 {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
     public Task
     {
         ValidationUtils.validateId(id);
