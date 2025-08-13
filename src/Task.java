@@ -1,8 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public record Task(
         int id,
@@ -37,16 +35,4 @@ public record Task(
     {
         return new Task(this.id, this.description, newStatus, this.createdAt, Optional.of(LocalDateTime.now()));
     }
-
-//    @Override
-//    public String toString()
-//    {
-//        String createdAtFormatted = createdAt.format(FORMATTER);
-//        String updatedAtFormatted = (updatedAt != null)
-//                ? updatedAt.format(FORMATTER)
-//                : "N/A";
-//
-//        return String.format("{\n\tid: %d,\n\tdescription: \"%s\",\n\tstatus: \"%s\",\n\tCreated At: \"%s\",\n\tUpdated At: \"%s\"\n}",
-//                id, description, status.getLabel(), createdAtFormatted, updatedAtFormatted);
-//    }
 }

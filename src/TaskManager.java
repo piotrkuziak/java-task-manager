@@ -1,15 +1,11 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class TaskManager
+public final class TaskManager
 {
     private final List<Task> tasks = new ArrayList<>();
     private final Path filePath = Paths.get("tasks.json");
@@ -25,53 +21,54 @@ public class TaskManager
         updateNextId();
     }
 
-    private void loadTasksFromJson()
+    private final void loadTasksFromJson()
     {
         final String jsonContent = FileOperations.readFile(filePath);
         final List<Task> loadedTasks = JsonParser.parseTaskArray(jsonContent);
+        this.tasks.clear();
         this.tasks.addAll(loadedTasks);
     }
 
-    private void saveTasksToJson()
+    private final void saveTasksToJson()
     {
         final String jsonContent = JsonFormatter.tasksToJson(tasks);
         FileOperations.writeFile(filePath, jsonContent);
     }
 
-    private void updateNextId()
+    private final void updateNextId()
     {
         nextId = tasks.stream()
-                    .mapToInt(Task::getId)
+                    .mapToInt(Task::id)
                     .max()
                     .orElse(0) + 1;
     }
 
-    public void addTask(String description)
+    public final void addTask(final String description)
     {
-        tasks.add(new Task(nextId++, description));
+        tasks.add(Task.createNew(nextId++, description));
         saveTasksToJson();
     }
 
-    public List<Task> getTasks()
+    public final List<Task> getTasks()
     {
-        return tasks;
+        return List.copyOf(tasks);
     }
 
-    public Optional<Task> getTask(int id)
+    public final Optional<Task> getTask(final int id)
     {
         return tasks.stream()
-                .filter(t -> t.getId() == id)
+                .filter(t -> t.id() == id)
                 .findFirst();
     }
 
-    public List<Task> getTasksByStatus(Status status)
+    public final List<Task> getTasksByStatus(final Status status)
     {
         return tasks.stream()
-                .filter(task -> task.getStatus() == status)
+                .filter(task -> task.status() == status)
                 .collect(Collectors.toList());
     }
 
-    public void updateDescription(int id, String description)
+    public final void updateDescription(final int id, final String description)
     {
         Task oldTask = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
         Task newTask = oldTask.withDescription(description);
@@ -79,7 +76,7 @@ public class TaskManager
         saveTasksToJson();
     }
 
-    public void updateStatus(int id, Status status)
+    public final void updateStatus(final int id, final Status status)
     {
         Task oldTask = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
         Task newTask = oldTask.withStatus(status);
@@ -87,7 +84,7 @@ public class TaskManager
         saveTasksToJson();
     }
 
-    public void deleteTask(int id)
+    public final void deleteTask(final int id)
     {
         Task task = getTask(id).orElseThrow(() -> new IllegalArgumentException("Task with id " + id + " doesn't exist"));
         tasks.remove(task);
