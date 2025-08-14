@@ -43,10 +43,12 @@ public final class TaskManager
                     .orElse(0) + 1;
     }
 
-    public final void addTask(final String description)
+    public final int addTask(final String description)
     {
         tasks.add(Task.createNew(nextId++, description));
         saveTasksToJson();
+
+        return nextId - 1;
     }
 
     public final List<Task> getTasks()

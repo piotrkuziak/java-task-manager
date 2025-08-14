@@ -1,5 +1,4 @@
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,8 @@ public final class JsonParser
     private static <T> Optional<T> parseOptionalField(Matcher matcher, Function<String, T> parser)
     {
         if (matcher.find())
-            return Optional.of(parser.apply(matcher.group(1)));
+            if (!matcher.group(1).equals("null"))
+                return Optional.of(parser.apply(matcher.group(1)));
 
         return Optional.empty();
     }
